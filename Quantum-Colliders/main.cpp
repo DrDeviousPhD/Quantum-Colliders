@@ -85,8 +85,11 @@ public:
 
 	AB(int _a, string _b)
 	{
-		components.push_back(new A(_a));
-		components.push_back(new B(_b));
+		auto a = make_shared<A>(_a);
+		auto b = make_shared<B>(_b);
+
+		components.push_back(a);
+		components.push_back(b);
 	}
 };
 
@@ -137,7 +140,8 @@ int main()
 	else
 		cout << "No." << endl;
 
-	ab.addPart(new C("It worked!! :D"));
+	auto cptr = make_shared<C>("It worked!! :D");
+	ab.addPart(cptr);
 
 	cout << "How about now?" << endl;
 
@@ -164,7 +168,10 @@ int main()
 	/* This works, but isn't safe. Trying to access the component's parent would be 'undefined' which is always bad */
 
 	cout << "Trying something new. The D component has both an A and B component." << endl;
-	ab.addPart(new D(69, "So meta"));
+	
+	
+	auto dptr = make_shared<D>(69, "So meta");
+	ab.addPart(dptr);
 
 	cout << "Does it exist?" << endl;
 	if (ab.hasPart<D>())

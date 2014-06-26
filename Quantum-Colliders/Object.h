@@ -23,7 +23,7 @@ class Object
 public:
 
 	Object *parent;
-	vector<Component*> components;
+	vector<shared_ptr<Component>> components;
 
 
 
@@ -51,7 +51,7 @@ public:
 	}
 
 	template <typename T>
-	bool addPart(T *comp)
+	bool addPart(shared_ptr<T> comp)
 	{
 		if (hasPart<T>())
 		{
@@ -80,12 +80,25 @@ public:
 		{
 			if ((*it)->getType() == T::type)
 			{
-				return *static_cast<T*> (*it);
+				return *static_cast<T*> (it->get());
 			}
 		}
 
 		throw std::invalid_argument("Could not find the component");		// I hope this works.
 	}
+
+
+
+	/* Helpers */
+
+	/* Not sure if this is a good idea, but lets us convert parameters to shared ptrs faster */
+	template <typename T>
+	shared_ptr<T> convert_param(T arg)	
+	{
+		// Does this even work?
+		return make_shared<T>(arg);
+	}
+
 };
 
 #endif
